@@ -1,0 +1,1202 @@
+// kartu masuk bulanan
+{
+	"status":true,
+	"data":
+	{
+		"kode":"820180607942175",
+		"tgl":"2018-06-07 09:15:42",
+		"exp":"2018-06-14 09:15:42",
+		"bill_seq":"5334545969",
+		"total_tr":90000
+	},
+	"message":"",
+	"result":"00"
+}
+
+//kebersihan kapal
+{
+	"kddept":"032",
+	"kdunit":"03",
+	"kdsatker":"537611",
+	"jns_pnbp":"F",
+	"username":"BENDAHARA+PENERIMAAN",
+	"kdmu":"1",
+	"dtl":
+		[{
+			"nmwaba":"tes_lagi",
+			"kdtarif":"032__2015075__000257",
+			"kdmak":"425621",
+			"tarif":"300.0000",
+			"volume":"23.00",
+			"satuan":"per+panjang+kapal+per+etmal",
+			"amount_tr":"6,900.00",
+			"keterangan":""
+		}]
+}
+
+
+jQuery('input.numerictarif').autoNumeric({vMax: '999999999999.0000'});
+jQuery('input.numericvol').autoNumeric({vMax: '999999999999.00'});
+jQuery('input.numeric').autoNumeric({vMax: '999999999999999999.00'});
+//jQuery('input.numericjum').autoNumeric({vMax: '999999999999999.00'});
+
+
+function openModal(Messages,Titles,OpenURLs)
+{
+	$.modal({
+		content: Messages,
+		title: '<div align="right">'+Titles+'</div>',
+		scrolling: false,
+		actions: {
+			'Close' : {
+				color: 'red',
+				click: function(win) { win.closeModal(); }
+			}
+		},
+		buttons: {
+			'Ok': {
+				click: function(win) { if(OpenURLs==''){win.closeModal();}else{window.location = OpenURLs;};},
+				classes: 'blue-gradient glossy full-width'
+			}
+		},
+		buttonsLowPadding: true
+	});
+}
+function openAkun(Messages,Titles,OpenURLs)
+{
+	$.modal({
+		content: Messages,
+		title: '<div align="right">'+Titles+'</div>',
+		scrolling: false,
+		actions: {
+			'Close' : {
+				color: 'red',
+				click: function(win) { win.closeModal(); }
+			}
+		},
+		buttons: {
+			'Ok': {
+				click: function(win) { if(OpenURLs==''){win.closeModal();}else{window.location = OpenURLs;};},
+				classes: 'blue-gradient glossy full-width'
+			}
+		},
+		buttonsLowPadding: true
+	});
+}
+// Demo loading modal
+function openLoadingModal()
+{
+	var timeout;
+	$.modal({
+		contentAlign: 'center',
+		width: 240,
+		title: 'Loading',
+		content: '<div style="line-height: 25px; padding: 0 0 10px"><span id="modal-status">Contacting server...</span><br><span id="modal-progress">0%</span></div>',
+		buttons: {},
+		scrolling: false,
+		actions: {
+			'Cancel': {
+				color:	'red',
+				click:	function(win) { win.closeModal(); }
+			}
+		},
+		onOpen: function()
+		{
+		// Progress bar
+			var progress = $('#modal-progress').progress(100, {
+			size: 200,
+			style: 'large',
+			barClasses: ['anthracite-gradient', 'glossy'],
+			stripes: true,
+			darkStripes: false,
+			showValue: false
+			}),
+		// Loading state
+		loaded = 0,
+		// Window
+		win = $(this),
+		// Status text
+		status = $('#modal-status'),
+		// Function to simulate loading
+		simulateLoading = function()
+		{
+			++loaded;
+			progress.setProgressValue(loaded+'%', true);
+			if (loaded === 100)
+			{
+				progress.hideProgressStripes().changeProgressBarColor('green-gradient');
+				status.text('Done!');
+				/*win.getModalContentBlock().message('Content loaded!', {
+				classes: ['green-gradient', 'align-center'],
+				arrow: 'bottom'
+				});*/
+				setTimeout(function() { win.closeModal(); }, 1500);
+			}
+			else
+			{
+				if (loaded === 1)
+				{
+					status.text('Loading data...');
+					progress.changeProgressBarColor('blue-gradient');
+				}
+				else if (loaded === 25)
+				{
+					status.text('Loading assets (1/3)...');
+				}
+				else if (loaded === 45)
+				{
+					status.text('Loading assets (2/3)...');
+				}
+				else if (loaded === 85)
+				{
+					status.text('Loading assets (3/3)...');
+				}
+				else if (loaded === 92)
+				{
+					status.text('Initializing...');
+				}
+				timeout = setTimeout(simulateLoading, 50);
+			}
+		};
+		// Start
+		timeout = setTimeout(simulateLoading, 2000);
+	},
+	onClose: function()
+	{
+	// Stop simulated loading if needed
+		clearTimeout(timeout);
+	}
+});
+};
+var username=jQuery('#username').val();
+var kdeptlihat=jQuery('#deptlihat').val();
+var kdunitlihat=jQuery('#unitlihat').val();
+var satkerlihat=jQuery('#satkerlihat').val();
+
+jQuery('#lihat').click(function () 
+{
+	openModal('<label for="input-1" class="label">No. Billing</label>:&nbsp'+username+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<label for="input-1" class="label">No. Tanggal Billing</label>:'+kdeptlihat+
+	'<br><br><br><label for="input-1" class="label">Nama Penyetor</label>:&nbsp'+username+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<label for="input-1" class="label">No. Tanggal Kadaluarsa</label>:&nbsp<br><br><br><label for="input-1" class="label">Kementrian / Lembaga</label>:&nbsp'+kdeptlihat+
+	'<br><br><br><label for="input-1" class="label">Unit Eselon 1</label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:&nbsp'+kdunitlihat+'<br><br><br><label for="input-1" class="label">Unit Eselon 1</label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:&nbsp'
+	,'Lihat','');
+	return false;
+});
+jQuery(".chzn-select").chosen();
+	isSaved=false;
+function openModal(Messages,Titles,OpenURLs)
+{
+	$.modal({
+		content: Messages,
+		title: '<div align="right">'+Titles+'</div>',
+		scrolling: false,
+		actions: {
+			'Close' : {
+				color: 'red',
+				click: function(win) { win.closeModal(); }
+			}
+		},
+		buttons: {
+			'Ok': {
+				click: function(win) { if(OpenURLs==''){win.closeModal();}else{window.location = OpenURLs;};},
+				classes: 'blue-gradient glossy full-width'
+			}
+		},
+		buttonsLowPadding: true
+	});
+}
+//select all
+jQuery("#selectcheckboxall").click(function(y){
+	if(jQuery("#selectcheckboxall").attr("checked")=="checked") {
+		jQuery("input[name='lineSeq']").attr("checked", "checked");
+	} else {
+		jQuery("input[name='lineSeq']").removeAttr("checked");
+	}
+});
+		
+jQuery("#selectcheckboxall").click(function (i) {
+	jQuery('.checkbox').attr('checked', this.checked);
+});
+		
+jQuery('input.numeric').autoNumeric();
+
+function jnsPenerimaanChanged(){
+	
+	jQuery('a.tarif').unbind("click");
+	jQuery('a.tarif').click(function (){
+	 $("#searchbox").val("");
+	  jQuery('#btnexpand').css("display","none");
+		if ( isSaved ) {
+			openModal('Data sudah disimpan, tidak dapat diubah','Perhatian','');
+			return false;
+		}
+		rowData=this.parentNode.parentNode;
+		display=this.previousSibling;
+		kdtarif=display.previousSibling;
+		var dept='';
+		if ( jQuery('input:radio[name=jns_pnbp]:checked').val()=='F' ){
+			if ( jQuery('#dept').val()!='' ){
+				var dept=jQuery('#dept').val();
+				var satker=jQuery('#satker').val();
+				
+				loadTarif(dept,'',satker);
+			}else{
+				openModal('Untuk Jenis Billing Fungsional, pilih K/L terlebih dahulu','Perhatian','');
+				return false;
+			}
+		}else{
+			loadTarifumum(dept,'');
+		}
+		rowData=this.parentNode.parentNode;
+		display=this.previousSibling;
+		kdtarif=display.previousSibling;
+		jQuery('#simple-modal').modal({
+			actions: {
+				'Close' : {
+					color: 'red',
+					click: function(win) { win.closeModal(); }
+				}
+			},
+			buttons: {}
+		});
+		return false;
+	});
+	
+	jQuery('input[name=vol]').unbind("click");
+		jQuery('input[name=vol]').click(function () {
+			if ( isSaved ) {
+				$.modal.alert('Sudah disimpan, data tidak bisa dirubah');
+				return false;
+			}
+			var index=this.id;
+			index=index.replace('vol','');
+			
+				var trf = jQuery('input#trf'+index).autoNumericGet();
+				jQuery('input#trf'+index).autoNumericSet(trf);		
+	});
+	
+	
+		jQuery('input[name=vol]').unbind("change");
+		jQuery('input[name=vol]').change(function () {
+			if ( isSaved ) {
+				$.modal.alert('Sudah disimpan, data tidak bisa dirubah');
+				return false;
+			}
+			
+			var qwe=jQuery('#kdmu').val();
+			if(qwe=='1'){
+			//jQuery('input.numericjum').autoNumeric({vMax: '999999999999999999.00'});
+			}else{
+			jQuery('input.numericjum').autoNumeric({vMax: '999999999999999999.0000'});
+			}
+			var index=this.id;
+			
+			index=index.replace('vol','');
+			if ( jQuery('input#jml'+index).autoNumericGet()==0 ){
+				var vol = jQuery('input#vol'+index).autoNumericGet();
+				var trf = jQuery('input#trf'+index).autoNumericGet();
+				jQuery('input#jml'+index).autoNumericSet(trf*vol);	
+				var jumtariff= trf*vol;
+				var qwe=jQuery('#kdmu').val();
+				
+				if(qwe=='1')
+				{
+					jQuery('input#jml'+index).autoNumericSet(Math.round(trf*vol));
+				}
+				else
+				{
+					jQuery('input#jml'+index).autoNumericSet(trf*vol);
+				}
+				
+				countTotalTrx();//count total trx - Mazendi 10102014
+				
+				//if(jumtariff > 999999999999){
+				//$.modal.alert("Jumlah maksimal 999.999.999.999");
+				//}
+			}else{ 
+								
+				$.modal.confirm("Kolom Jumlah akan dihitung ulang?", function () {
+				//jQuery('input.numericjum').autoNumeric({vMax: '999999999999999.00000'});
+				
+					
+				var vol = jQuery('input#vol'+index).autoNumericGet();
+				var trf = jQuery('input#trf'+index).autoNumericGet();
+				
+				jQuery('input#jml'+index).autoNumericSet(trf*vol);
+				var jumtariff= trf*vol;
+				if(qwe=='1'){
+						jQuery('input#jml'+index).autoNumericSet(Math.round(trf*vol));
+					}else{
+					    jQuery('input#jml'+index).autoNumericSet(trf*vol);
+					}
+					
+					countTotalTrx();//count total trx - Mazendi 10102014
+					
+				//if(jumtariff > 999999999999){
+				//$.modal.alert("Jumlah maksimal 999.999.999.999");
+				//}
+				});
+			}
+			
+						
+		});
+		
+				 
+		jQuery('input[name=jumlah]').unbind("change");
+		jQuery('input[name=jumlah]').change(function () {
+			if ( isSaved ) {
+				$.modal.alert('Sudah disimpan, data tidak bisa dirubah');
+				return false;
+			}
+			var index=this.id;
+			index=index.replace('jml','');
+			
+			
+			if ( jQuery('input#vol'+index).autoNumericGet()==0 ){
+				var jml = jQuery('input#jml'+index).autoNumericGet();
+				var trf = jQuery('input#trf'+index).autoNumericGet();
+				if ( trf==0 ){
+					jQuery('input#vol'+index).autoNumericSet(0);
+				}else{
+					jQuery('input#vol'+index).autoNumericSet(jml/trf);
+				}
+				countTotalTrx();// count total trx - Mazendi 10102014
+			}
+			else
+			{
+			 
+				$.modal.confirm("Anda akan menghitung ulang?", function () {
+				
+				var jml = jQuery('input#jml'+index).autoNumericGet();
+				jQuery('input#jml'+index).autoNumericSet(jml);		
+				
+				var trf = jQuery('input#trf'+index).autoNumericGet();
+				if ( trf==0 ){
+					jQuery('input#vol'+index).autoNumericSet(0);
+				}else{
+					jQuery('input#vol'+index).autoNumericSet(jml/trf);
+					
+				}
+				
+			});
+			countTotalTrx();//count total trx - Mazendi 10102014
+		}		
+	});
+}
+jnsPenerimaanChanged();
+	
+	dtlRow=1;
+	jQuery('a#dtladd').click(function () {
+	
+		if ( isSaved ) {
+			openModal('Data sudah disimpan, tidak dapat diubah','Perhatian','');
+			return false;
+		}
+		
+		oTable=jQuery('#dt2').dataTable();
+		var al=oTable.fnGetNodes();
+	
+		oTable.fnAddData([
+			'<td><input type="checkbox" name="lineSeq"/></td>',
+			'<td><input type="text" maxlength="50" style="width:90%" class="textips string" name="nmwaba"></td>',
+			'<td><input type=hidden name="kdtarif"><input type="text" maxlength="6" class="string" style="width:70%" name="jnspnrm" disabled="disabled"><a href="#" class="lovbutton tarif">...</a></td>',
+			'<td><input type="text" maxlength="100" style="width:90%" class="textips string" name="akun" disabled="disabled"></td>',
+			'<td><input type="text" maxlength="20" style="width:90%" class="numerictarif" name="tarif" id="trf'+dtlRow+'"/></td>',
+			'<td><input type="text" maxlength="20" style="width:90%" class="numericvol" name="vol" id="vol'+dtlRow+'"/></td>',
+			'<td><input type="text" maxlength="100" style="width:90%" class="string" name="satuan"></td>',
+			'<td><input type="text" maxlength="20" style="width:90%" class="numeric" name="jumlah" id="jml'+dtlRow+'"/></td>',
+			'<td><input type="text" maxlength="200" style="width:90%" class="string" name="keterangan"></td>'] );
+		var el=oTable.fnGetNodes();
+		jQuery.each(el,function(key, val){
+			for(i=0;i<9;i++){
+				val.childNodes[i].className="center";
+				jQuery('input[name=jns_pnbp]').attr("disabled","disabled");
+			}
+			
+		});
+		
+		if ( jQuery('input:radio[name=jns_pnbp]:checked').val()=='F'  ){
+			jQuery('input[name=tarif]').attr("disabled","disabled");
+			jQuery('input[name=satuan]').attr("disabled","disabled");
+		}
+		
+		else{
+			jQuery('input[name=tarif]').removeAttr("disabled");
+			jQuery('input[name=satuan]').removeAttr("disabled");
+			
+		}
+		jQuery('input.numerictarif').autoNumeric({vMax: '999999999999.0000'});
+		jQuery('input.numeric').autoNumeric({vMax: '999999999999.00'});
+		jQuery('input.numericvol').autoNumeric({vMax: '999999999999.00'});
+		jnsPenerimaanChanged();
+		dtlRow++;
+		return false;
+	});
+	
+	function countTotalTrx() // Created By Mazendi 10102014
+	{
+		jQuery('input.strongnumeric').autoNumeric({vMax: '999999999999999999.00'});
+		var qwe=jQuery('#kdmu').val();
+		var total = 0;
+		$('input[name=jumlah]').each(function() 
+		{
+			var jml = jQuery('#'+this.id).autoNumericGet();
+		
+			if(qwe=='1')
+			{
+				total += parseInt(jml);
+			}
+			else
+			{	
+				total += parseFloat(jml);
+			}
+		});
+		
+		
+		 if(total > 999999999999){
+		  $.modal.alert("Jumlah Pembayaran Maksimal Rp.999.999.999.999");
+		  $("#ttl_tr").autoNumericSet(total);
+		 }
+		 else
+		 {
+			$("#ttl_tr").autoNumericSet(total);
+		}	
+	}
+	
+	jQuery('a#delete').click(function () {
+		var el=jQuery('input:checked[name=lineSeq]');
+		if ( el.length==0 ){
+			$.modal.alert('Pilih minimal satu');
+			return false;
+		}
+		console.log("coba hapus");
+		$.modal.confirm('Anda yakin akan menghapus?', function()
+		{
+			var idkl=Array();
+			jQuery.each(el,function(key, val){ idkl.push(val.value); });
+			console.log("hapus");	
+			el=jQuery('input:checked[name=lineSeq]').parents('tr');
+			jQuery.each(el,function(key, val){
+				var oTable = jQuery('#dt2').dataTable();
+				
+				var aPos = oTable.fnGetPosition( val );
+					
+				oTable.fnDeleteRow( aPos );
+		
+				jQuery('input[name=jns_pnbp]').removeAttr("disabled");
+				
+			});
+			countTotalTrx();	
+			console.log("ok");
+		}, function(){
+			console.log("batal hapus");
+		});
+		//return false;
+		countTotalTrx();
+	}
+	);
+	
+	jQuery('input:radio[name=jns_pnbp]').change(function(){
+		if ( jQuery('input:radio[name=jns_pnbp]:checked').val()=='F' ){
+			jQuery('input[name=tarif]').attr("disabled","disabled");
+			jQuery('input[name=satuan]').attr("disabled","disabled");
+		}else{
+			jQuery('input[name=tarif]').removeAttr("disabled");
+			jQuery('input[name=satuan]').removeAttr("disabled");
+		}
+	});
+	jQuery('#kdmu').change(function(){
+ 		var oTabl=jQuery('#dt2').dataTable();
+		var ul=oTabl.fnGetNodes();
+		var arip=ul.length;
+		if(arip >1){
+		openModal("<center>Yakin akan merubah mata uang ? <br>Ini akan merubah mata uang pada detail perekaman sebelumnya</center>",'Perhatian','');		
+		}
+	});
+	
+	function SubmitBillingKL()
+	{
+		$.modal.confirm('Apakah Pembuatan Data Pembayaran ini akan Diproses ?', function()
+		{
+			//$.modal.alert('Me gusta!');
+			var timeout;
+			$.modal({
+				contentBg: false,
+				contentAlign: 'center',
+				content: 'Mohon Tunggu',
+				resizable: false,
+				actions: {},
+				buttons: {},
+				buttonsAlign: 'center',
+				onOpen: function()
+				{
+					win = $(this)
+					
+					if ( isSaved ) {
+						openModal('Data sudah disimpan, tidak dapat diubah','Perhatian','');
+						return false;
+					}
+		
+					//jumlah
+					var oTabl=jQuery('#dt2').dataTable();
+				    var ul=oTabl.fnGetNodes();
+					var arip=ul.length;
+					for( var b=0;b<arip;b++){
+						if ($("#jml"+b).val()=="") {
+						    openModal("Jumlah tidak boleh kosong",'Perhatian','');
+							jQuery('#submit').css("display","inline");
+							setTimeout(function() { win.closeModal(); }, 150);			
+						    return false;
+						}
+						if ($("#jml"+b).val()=="0.00") {
+						//alert($("#jml"+b).val());
+						   openModal("Jumlah tidak boleh 0",'Perhatian','');
+							jQuery('#submit').css("display","inline");
+							setTimeout(function() { win.closeModal(); }, 150);			
+						    return false;
+						}
+					}
+					
+					var strongtotal = jQuery("#ttl_tr").autoNumericGet();
+					if (strongtotal > 999999999999) { 
+						   openModal("Total Jumlah maksimal 999.999.999.999",'Perhatian','');
+							jQuery('#submit').css("display","inline");
+							setTimeout(function() { win.closeModal(); }, 150);			
+						    return false;
+						}
+					
+
+				//=================
+					if ( jQuery('#dept').val()==null ){
+						openModal('Nama Kementerian/Lembaga tidak oleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('#unit').val()==null ){
+						openModal('Nama unit tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('#satker').val()==null ){
+						openModal('Nama satker tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					/*
+					if ($("#satker option[value='']").attr('selected')) {
+						openModal('Nama satuan kerja tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					*/
+					if ($("#kdmu option[value='']").attr('selected')) {
+						openModal('Jenis mata uang tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('input[name="nmwaba"][value=]').length!=0 ){
+						openModal('Nama wajib bayar tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('input[name="kdtarif"][value=]').length!=0 ){
+						openModal('Jenis penerimaan tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('input[name="akun"][value=]').length!=0 ){
+						openModal('Jenis Akun tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('input[name="vol"][value=]').length!=0 ){
+						openModal('Volume tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}
+					if ( jQuery('input[name="satuan"][value=]').length!=0 ){
+						openModal('Satuan tidak boleh kosong','Perhatian','');
+						jQuery('#submit').css("display","inline");
+						setTimeout(function() { win.closeModal(); }, 150);						
+						return false;
+					}					
+					
+
+					
+					// if ( (jQuery('input[name="jumlah"]').val()==0.00)||(jQuery('input[name="jumlah"]').val()==0)||(jQuery('input[name="jumlah"]').val()=='')||(jQuery('input[name="jumlah"]').val()=='')||( jQuery('input[name="vol"][value=]').length!=0 ) ){
+					// openModal('Jumlah tidak boleh kosong','Perhatian','');
+					// jQuery('#submit').css("display","inline");
+					// setTimeout(function() { win.closeModal(); }, 150);						
+					// return false;
+					// }
+
+					var args={
+						'kddept':jQuery('#dept').val(),
+						'kdunit':jQuery('#unit').val(),
+						'kdsatker':jQuery('#satker').val(),
+						'jns_pnbp':jQuery('input:radio[name=jns_pnbp]:checked').val(),
+						'spn_no':jQuery('#spn_no').val(),
+						'username':jQuery('#username').val(),
+						'kdmu':jQuery('#kdmu').val(),
+						'jumlah':jQuery('#jumlah').val(),
+						'keterangan':jQuery('#keterangan').val()
+					};
+					var tmail='';
+					var oTable = jQuery('#dt2').dataTable();
+					var el=oTable.fnGetNodes();
+					var bill={};
+					var dtl=Array();
+					jQuery.each(el,function(key, val){
+						bill={};
+						bill.nmwaba	=val.childNodes[1].childNodes[0].value;//wajib bayar
+						bill.kdtarif	=val.childNodes[2].childNodes[0].value;//kdtarif
+						bill.kdmak	=val.childNodes[3].childNodes[0].value;//kdakun/kdmak
+						bill.tarif	=val.childNodes[4].childNodes[0].value;//tarif
+						bill.volume	=val.childNodes[5].childNodes[0].value;//volume
+						bill.satuan	=val.childNodes[6].childNodes[0].value;//satuan
+						bill.amount_tr	=val.childNodes[7].childNodes[0].value;//jumlah
+						bill.keterangan	=val.childNodes[8].childNodes[0].value;//keterangan
+						dtl.push(bill);
+					});
+					
+					args.dtl=dtl; 
+
+					jQuery.post('https://simponi.kemenkeu.go.id/index.php/billkl/forminsert' ,{ formvalues:JSON.stringify(args) },
+						function(response, textStatus, xhr ){
+							//alert('0 : '+response.result+' '+textStatus);
+							if ( textStatus!='success' ){
+								// alert('1 : '+response.result);
+								openModal('Terjadi kesalahan','Perhatian','');
+								setTimeout(function() { win.closeModal(); }, 1500);	
+								return false;
+							}
+							if ( textStatus=='success' ){
+								// alert('2 : '+response.result+' '+textStatus);
+								
+								if (response.result === false || response.result == '99' || typeof(response.result) == 'undefined')
+								{
+								 	// alert('3 : '+response.result);
+									openModal('Proses Pembuatan Billing Gagal, Silahkan Ulangi Proses Pembuatan Billing','Informasi','');
+									setTimeout(function() { win.closeModal(); }, 1500);		
+									return false;						
+								}
+								else if (response.result == '00')
+								{
+									// alert('4 : '+response.result);
+									openModal('Data pembayaran telah berhasil disimpan','Informasi','');
+									setTimeout(function() { win.closeModal(); }, 1500);								
+								} 
+								
+							}
+							
+							if ( response.status==true ){	
+								jQuery('#bill_seq').val(response.data.bill_seq);
+								jQuery('#kd_billing').val(response.data.kode);
+								jQuery('#tgl_billing').val(response.data.tgl);
+								jQuery('#tgl_kadaluarsa').val(response.data.exp);
+								jQuery('#total_tr').val(response.data.total_tr);
+								jQuery('#submit').remove();
+								jQuery('#print').css("display","inline");
+								jQuery('#optionbutton').remove();
+								isSaved=true;
+								tmail=response.mailid;
+							}else{
+								openModal(response.message,'Perhatian','');
+							}
+						}, 'json' );
+						/*
+						jQuery.post('https://simponi.kemenkeu.go.id/index.php/billkl/sentemaillbill' ,{ formval:JSON.stringify(tmail) },
+							function(response, textStatus, xhr ){
+								//if ( response.status==true ){
+									openModal(response.message,'Informasi','');						
+								//}else{
+									//openModal(response.message,'Perhatian','');
+								//}
+							}, 'json' );
+						*/		
+						return false;
+				}
+			});			
+		}, function()
+		{
+			$.modal.alert('Proses Pembuatan Data Pembayaran Dibatalkan');
+		});
+	};
+
+jQuery('#print').click(function () {
+	var url=jQuery(this).attr("name");
+	var seq=jQuery('#bill_seq').val();
+	window.open(url+'/'+seq);
+	return false;
+});
+
+
+
+		$(document).ready(function()
+		{
+			var doc = $('html').addClass('js-login'),
+				container = $('#container'),
+				formWrapper = $('#form-wrapper'),
+				formBlock = $('#form-block'),
+				formViewport = $('#form-viewport'),
+				forms = formViewport.children('form'),
+
+				// Doors
+				topDoor = $('<div id="top-door" class="form-door"><div></div></div>').appendTo(formViewport),
+				botDoor = $('<div id="bot-door" class="form-door"><div></div></div>').appendTo(formViewport),
+				doors = topDoor.add(botDoor),
+
+				// Switch
+				formSwitch = $('<div id="form-switch"><span class="button-group"></span></div>').appendTo(formBlock).children(),
+
+				// Current form
+				hash = (document.location.hash.length > 1) ? document.location.hash.substring(1) : false,
+
+				// If layout is centered
+				centered,
+
+				// Store current form
+				currentForm,
+
+				// Animation interval
+				animInt,
+
+				// Work vars
+				maxHeight = false,
+				blocHeight;
+
+			var errmsg = $.trim($('#errmsg').val());
+
+			if (errmsg.length > 0) {
+				displayError('Nama Pengguna dan Kata Sandi harus diisi');
+			}
+
+			$('#form-login').submit(function(event)
+			{
+				// Values
+				var login = $.trim($('#login').val()),
+					pass = $.trim($('#pass').val());
+
+				// Check inputs
+				if (login.length === 0)
+				{
+					// Display message
+					displayError('Harap isi <em>form login</em> untuk masuk');
+					return false;
+				}
+				else if (pass.length === 0)
+				{
+					// Remove empty login message if displayed
+					formWrapper.clearMessages('Harap isi <em>form login</em> untuk masuk');
+
+					// Display message
+					displayError('Kolom <em>password</em> tidak boleh kosong');
+					return false;
+				}
+				else if (pass.length < 5)
+				{
+					// Remove empty login message if displayed
+					formWrapper.clearMessages('Harap isi <em>form login</em> untuk masuk');
+
+					// Display message
+					displayError('<em>Password</em> minimal 6 digit');
+					return false;
+				}
+				else
+				{
+					// Remove previous messages
+					formWrapper.clearMessages();
+
+					// Show progress
+					displayLoading('Memeriksa data pengguna...');
+
+				}
+			});
+
+			/*
+			 * Lupa Password
+			 */
+			$('#form-password').submit(function(event)
+			{
+				// Values
+				var mail = $.trim($('#email').val());
+				// Check inputs
+				if (mail.length === 0)
+				{
+					// Display message
+					displayError('Harap isi alamat email');
+				}
+				else if (!/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(mail))
+				{
+					// Remove empty email message if displayed
+					formWrapper.clearMessages('Harap isi alamat email');
+
+					// Display message
+					displayError('Alamat Email tidak valid');
+					return false;
+				}
+				else
+				{
+					// Remove previous messages
+					formWrapper.clearMessages();
+
+					// Show progress
+					displayLoading('Memeriksa data pengguna...');
+
+
+				}
+			});
+
+			/*
+			 * Register
+			 */
+			$('#form-register').submit(function(event)
+			{
+				$('#load').remove();
+				$('#contain').append('<div id="load" align="center">LOADING...</div>');
+				$('#load').fadeIn('normal');
+
+				href1=$(this).attr('href') + "/1528344203";
+
+				//alert(href1);
+				$("#contain").load(href1);
+				$('#load').fadeOut('normal');
+			return false;
+			});
+
+			/******* END OF EDIT SECTION *******/
+
+			/*
+			 * Animated login
+			 */
+
+			// Prepare forms
+			forms.each(function(i)
+			{
+				var form = $(this),
+					height = form.outerHeight(),
+					active = (hash === false && i === 0) || (hash === this.id),
+					color = this.className.match(/[a-z]+-gradient/) ? ' '+(/([a-z]+)-gradient/.exec(this.className)[1])+'-active' : '';
+
+				// Store size
+				form.data('height', height);
+
+				// Min-height for mobile layout
+				if (maxHeight === false || height > maxHeight)
+				{
+					maxHeight = height;
+				}
+
+				// Button in the switch
+				form.data('button', $('<a href="#'+this.id+'" class="button anthracite-gradient'+color+(active ? ' active' : '')+'">'+this.title+'</a>')
+									.appendTo(formSwitch)
+									.data('form', form));
+
+				// If active
+				if (active)
+				{
+					// Store
+					currentForm = form;
+
+					// Height of viewport
+					formViewport.height(height);
+				}
+				else
+				{
+					// Hide for now
+					form.hide();
+				}
+			});
+
+			// Main bloc height (without form height)
+			blocHeight = formBlock.height()-currentForm.data('height');
+
+			// Handle resizing (mostly for debugging)
+			function handleLoginResize()
+			{
+				// Detect mode
+				centered = (container.css('position') === 'absolute');
+
+				// Set min-height for mobile layout
+				if (!centered)
+				{
+					formWrapper.css('min-height', (blocHeight+maxHeight+20)+'px');
+					container.css('margin-top', '');
+				}
+				else
+				{
+					formWrapper.css('min-height', '');
+					if (parseInt(container.css('margin-top'), 10) === 0)
+					{
+						centerForm(currentForm, false);
+					}
+				}
+			};
+
+			// Register and first call
+			$(window).bind('normalized-resize', handleLoginResize);
+			handleLoginResize();
+
+			// Switch behavior
+			formSwitch.on('click', 'a', function(event)
+			{
+				var link = $(this),
+					form = link.data('form'),
+					previousForm = currentForm;
+
+				event.preventDefault();
+				if (link.hasClass('active'))
+				{
+					return;
+				}
+
+				// IE7/8 have an issue with correct form height
+				if ($.template.ie7 || $.template.ie8)
+				{
+					forms.each(function(i)
+					{
+						var form = $(this),
+							hidden = form.is(':hidden'),
+							height = form.show().outerHeight();
+
+						// Store size
+						form.data('height', height);
+
+						// If not active
+						if (hidden)
+						{
+							// Hide for now
+							form.hide();
+						}
+					});
+				}
+
+				// Clear messages
+				formWrapper.clearMessages();
+
+				// If an animation is already running
+				if (animInt)
+				{
+					clearTimeout(animInt);
+				}
+				formViewport.stop(true);
+
+				// Update active button
+				currentForm.data('button').removeClass('active');
+				link.addClass('active');
+
+				// Set as current
+				currentForm = form;
+
+				// if CSS transitions are available
+				if (doc.hasClass('csstransitions'))
+				{
+					// Close doors - step 1
+					doors.removeClass('door-closed').addClass('door-down');
+					animInt = setTimeout(function()
+					{
+						// Close doors, step 2
+						doors.addClass('door-closed');
+						animInt = setTimeout(function()
+						{
+							// Hide previous form
+							previousForm.hide();
+
+							// Show target form
+							form.show();
+
+							// Center layout
+							centerForm(form, true);
+
+							// Height of viewport
+							formViewport.animate({
+								height: form.data('height')+'px'
+							}, function()
+							{
+								// Open doors, step 1
+								doors.removeClass('door-closed');
+								animInt = setTimeout(function()
+								{
+									// Open doors - step 2
+									doors.removeClass('door-down');
+								}, 300);
+							});
+						}, 300);
+					}, 300);
+				}
+				else
+				{
+					// Close doors
+					topDoor.animate({ top: '0%' }, 300);
+					botDoor.animate({ top: '50%' }, 300, function()
+					{
+						// Hide previous form
+						previousForm.hide();
+
+						// Show target form
+						form.show();
+
+						// Center layout
+						centerForm(form, true);
+
+						// Height of viewport
+						formViewport.animate({
+							height: form.data('height')+'px'
+						}, {
+
+							/* IE7 is a bit buggy, we must force redraw */
+							step: function(now, fx)
+							{
+								topDoor.hide().show();
+								botDoor.hide().show();
+								formSwitch.hide().show();
+							},
+
+							complete: function()
+							{
+								// Open doors
+								topDoor.animate({ top: '-50%' }, 300);
+								botDoor.animate({ top: '105%' }, 300);
+								formSwitch.hide().show();
+							}
+						});
+					});
+				}
+			});
+
+			// Initial vertical adjust
+			centerForm(currentForm, false);
+
+			function centerForm(form, animate, ignore)
+			{
+				// If layout is centered
+				if (centered)
+				{
+					var siblings = formWrapper.siblings().not('.closing'),
+						finalSize = blocHeight+form.data('height');
+
+					// Ignored elements
+					if (ignore)
+					{
+						siblings = siblings.not(ignore);
+					}
+
+					// Get other elements height
+					siblings.each(function(i)
+					{
+						finalSize += $(this).outerHeight(true);
+					});
+
+					// Setup
+					container[animate ? 'animate' : 'css']({ marginTop: -Math.round(finalSize/2)+'px' });
+				}
+			};
+
+			function displayError(message)
+			{
+				// Show message
+				var message = formWrapper.message(message, {
+					append: false,
+					arrow: 'bottom',
+					classes: ['red-gradient'],
+					animate: false					// We'll do animation later, we need to know the message height first
+				});
+
+				// Vertical centering (where we need the message height)
+				centerForm(currentForm, true, 'fast');
+
+				// Watch for closing and show with effect
+				message.bind('endfade', function(event)
+				{
+					// This will be called once the message has faded away and is removed
+					centerForm(currentForm, true, message.get(0));
+
+				}).hide().slideDown('fast');
+			};
+
+			function displayLoading(message)
+			{
+				// Show message
+				var message = formWrapper.message('<strong>'+message+'</strong>', {
+					append: false,
+					arrow: 'bottom',
+					classes: ['blue-gradient', 'align-center'],
+					stripes: true,
+					darkStripes: false,
+					closable: false,
+					animate: false					// We'll do animation later, we need to know the message height first
+				});
+
+				// Vertical centering (where we need the message height)
+				centerForm(currentForm, true, 'fast');
+
+				// Watch for closing and show with effect
+				message.bind('endfade', function(event)
+				{
+					// This will be called once the message has faded away and is removed
+					centerForm(currentForm, true, message.get(0));
+
+				}).hide().slideDown('fast');
+			};
+		});
+
+		// What about a notification?
+		//notify('SIMPONI', 'Sistem Informasi Penerimaan Negara Bukan Pajak - Online', {
+		//	autoClose: false,
+		//	delay: 2000,
+		//	icon: 'https://simponi.kemenkeu.go.id/asset/img/pajak_small.png'
+		//});
+
+		/*add by takdir 08112017*/
+		$(document).ready(function() {	
+
+		var id = '#dialog';
+			
+		//Get the screen height and width
+		var maskHeight = $(document).height();
+		var maskWidth = $(window).width();
+			
+		//Set heigth and width to mask to fill up the whole screen
+		$('#mask').css({'width':maskWidth,'height':maskHeight});
+
+		//transition effect
+		$('#mask').fadeIn(1);	
+		$('#mask').fadeTo("fast",0.9);	
+			
+		//Get the window height and width
+		var winH = $(window).height();
+		var winW = $(window).width();
+		              
+		//Set the popup window to center
+		$(id).css('top',  winH/2-$(id).height()/2);
+		$(id).css('left', winW/2-$(id).width()/2);
+			
+		//transition effect
+		$(id).fadeIn(5); 	
+			
+		//if close button is clicked
+		$('.window .close').click(function (e) {
+		//Cancel the link behavior
+		e.preventDefault();
+
+		$('#mask').hide();
+		$('.window').hide();
+		});
+
+		//if mask is clicked
+		$('#mask').click(function () {
+		$(this).hide();
+		$('.window').hide();
+		});
+			
+		});
+
+	
